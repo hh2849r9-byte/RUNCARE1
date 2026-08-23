@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RUNCARE - Run Smart. Recover Well. Live Better.</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            sky: '#0EA5E9',
+                            ice: '#E0F2FE',
+                            dark: '#1F2937',
+                            muted: '#6B7280',
+                            bg: '#F9FAFB',
+                            emerald: '#10B981',
+                            amber: '#F59E0B'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Roboto', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 360px;
+            }
+        }
+        .bento-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .bento-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.15);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 6px;
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #F1F5F9;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+        .iframe-container {
+            overflow: hidden;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-brand-bg text-brand-dark font-sans antialiased selection:bg-brand-sky selection:text-white pb-16 md:pb-0">
+
+    <!-- NAVIGATION BAR -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-2 group">
+                    <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-sky to-blue-600 flex items-center justify-center text-white text-xl font-bold shadow-md transform group-hover:scale-105 transition">🏃‍♂️</span>
+                    <div class="flex flex-col">
+                        <span class="text-xl font-black tracking-wider text-brand-dark leading-none">RUN<span class="text-brand-sky">CARE</span></span>
+                        <span class="text-[9px] text-brand-muted tracking-widest font-semibold uppercase">Smart Recovery</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-gray-700">
+                    <a href="#boicanh" class="hover:text-brand-sky transition-colors">Bối Cảnh</a>
+                    <a href="#chandung" class="hover:text-brand-sky transition-colors">Chân Dung</a>
+                    <a href="#bmc" class="hover:text-brand-sky transition-colors">Mô Hình BMC</a>
+                    <a href="#giaiphap" class="hover:text-brand-sky transition-colors">Giải Pháp</a>
+                    <a href="#goidichvu" class="hover:text-brand-sky transition-colors">Gói Dịch Vụ</a>
+                    <a href="#doingu" class="hover:text-brand-sky transition-colors">Đội Ngũ</a>
+                    <a href="#phanhoi" class="text-brand-sky hover:text-sky-600 transition-colors flex items-center gap-1 font-bold">💬 Góp Ý Dự Án</a>
+                </nav>
+
+                <!-- Action Button -->
+                <div class="hidden md:flex items-center gap-3">
+                    <button onclick="openModal('loginModal')" class="px-4 py-2 text-sm font-semibold text-brand-dark hover:text-brand-sky transition">Đăng Nhập</button>
+                    <a href="#assessment" class="px-5 py-2.5 rounded-full bg-brand-sky text-white text-sm font-bold shadow-md hover:bg-sky-600 transition hover:shadow-lg transform active:scale-95">Tải App RunCare</a>
+                </div>
+
+                <!-- Mobile Hamburger Button -->
+                <button id="menuBtn" class="md:hidden p-2 text-gray-600 hover:text-brand-dark focus:outline-none">
+                    <span class="text-2xl" id="menuIcon">☰</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-b border-gray-200 px-4 pt-2 pb-6 space-y-3 shadow-lg">
+            <a href="#boicanh" class="block py-2 text-gray-700 font-medium hover:text-brand-sky">1. Bối Cảnh & Thực Trạng</a>
+            <a href="#chandung" class="block py-2 text-gray-700 font-medium hover:text-brand-sky">2. Chân Dung Khách Hàng</a>
+            <a href="#bmc" class="block py-2 text-gray-700 font-medium hover:text-brand-sky">3. Mô Hình BMC (9 Ô)</a>
+            <a href="#giaiphap" class="block py-2 text-gray-700 font-medium hover:text-brand-sky">4. Giải Pháp & Tính Năng</a>
+            <a href="#goidichvu" class="block py-2 text-gray-700 font-medium hover:text-brand-sky">5. Gói Dịch Vụ & Giá</a>
+            <a href="#doingu" class="block py-2 text-gray-700 font-medium hover:text-brand-sky">6. Đội Ngũ Dự Án</a>
+            <a href="#phanhoi" class="block py-2 text-brand-sky font-bold hover:underline">7. Góp Ý & Phản Hồi Dự Án</a>
+            <div class="pt-2 border-t border-gray-100 flex flex-col gap-2">
+                <a href="#assessment" class="w-full text-center py-2.5 rounded-xl bg-brand-sky text-white font-bold shadow">Tải App RunCare Tự Động</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative bg-gradient-to-b from-brand-ice/40 via-white to-brand-bg py-12 md:py-20 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                <!-- Hero Left Content -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-ice border border-sky-200 text-brand-sky text-xs md:text-sm font-bold">
+                        <span>🏃‍♂️</span> Dịch Vụ Chăm Sóc Toàn Diện Cho Người Chạy Bộ
+                    </div>
+                    
+                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-brand-dark tracking-tight leading-tight">
+                        RUNCARE – <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-sky via-blue-600 to-teal-500">RUN SMART. RECOVER WELL. LIVE BETTER.</span>
+                    </h1>
+
+                    <p class="text-base sm:text-lg text-brand-muted max-w-2xl leading-relaxed">
+                        Hệ sinh thái tích hợp duy nhất kết nối <strong class="text-brand-dark">Giáo án cá nhân hóa</strong> – <strong class="text-brand-dark">Dinh dưỡng khoa học</strong> – <strong class="text-brand-dark">Phục hồi chuyên sâu</strong> & <strong class="text-brand-dark">Tư vấn Chuyên gia 1-1</strong> giúp bạn nâng tầm thể trạng và chạy bền vững.
+                    </p>
+
+                    <!-- Call to Actions -->
+                    <div class="flex flex-wrap items-center gap-4 pt-2">
+                        <a href="#assessment" class="px-7 py-3.5 rounded-full bg-brand-sky hover:bg-sky-600 text-white font-bold text-base shadow-lg shadow-sky-500/25 transition-all transform hover:-translate-y-0.5">
+                            Bắt Đầu Chạy Khoa Học Ngay 🚀
+                        </a>
+                        <a href="#phanhoi" class="px-6 py-3.5 rounded-full bg-white border border-brand-sky text-brand-sky font-semibold text-base hover:bg-sky-50 transition flex items-center gap-2 shadow-sm">
+                            <span>💬</span> Góp Ý Dự Án
+                        </a>
+                    </div>
+
+                    <!-- Social Proof Stats -->
+                    <div class="pt-6 border-t border-gray-200/80 grid grid-cols-3 gap-4">
+                        <div>
+                            <div class="text-2xl sm:text-3xl font-black text-brand-dark">10,000+</div>
+                            <div class="text-xs text-brand-muted font-medium">Runner Tin Dùng</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl sm:text-3xl font-black text-brand-sky">95%</div>
+                            <div class="text-xs text-brand-muted font-medium">Giảm Nguy Cơ Chấn Thương</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl sm:text-3xl font-black text-brand-dark">100+</div>
+                            <div class="text-xs text-brand-muted font-medium">HLV & Y Bác Sĩ Đồng Hành</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Right: Interactive Quiz Widget -->
+                <div id="assessment" class="lg:col-span-5">
+                    <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-xl border border-sky-100 relative">
+                        <div class="absolute -top-3 -right-3 bg-brand-sky text-white text-xs font-bold px-3 py-1 rounded-full uppercase shadow">
+                            Công cụ Tương tác
+                        </div>
+                        <h2 class="text-xl font-bold text-brand-dark mb-1 flex items-center gap-2">
+                            <span>🩺</span> Kiểm Tra Chỉ Số Chạy Khoa Học
+                        </h2>
+                        <p class="text-xs text-brand-muted mb-5">Đánh giá nhanh nguy cơ quá tải & gợi ý phục hồi chuẩn xác cho bạn.</p>
+
+                        <form id="quizForm" class="space-y-4 text-sm" onsubmit="event.preventDefault(); calculateRisk();">
+                            <div>
+                                <label class="block font-medium text-gray-700 mb-1">Cự ly mục tiêu của bạn:</label>
+                                <select id="targetDistance" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-sky focus:outline-none">
+                                    <option value="5k">5km (Người mới bắt đầu)</option>
+                                    <option value="10k">10km (Chạy phong trào)</option>
+                                    <option value="21k" selected>21km (Half Marathon)</option>
+                                    <option value="42k">42km (Full Marathon)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block font-medium text-gray-700 mb-1">Quãng đường chạy tuần này (km):</label>
+                                <input type="number" id="weeklyKm" value="35" min="5" max="200" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-sky focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block font-medium text-gray-700 mb-1">Thời gian ngủ trung bình mỗi đêm (giờ):</label>
+                                <input type="number" id="sleepHours" value="6.5" step="0.5" min="3" max="12" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-sky focus:outline-none">
+                            </div>
+
+                            <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-sky to-blue-600 text-white font-bold text-center shadow hover:opacity-95 transition">
+                                Phân Tích Mức Độ An Toàn ⚡
+                            </button>
+                        </form>
+
+                        <!-- Result Box -->
+                        <div id="quizResult" class="hidden mt-4 p-4 rounded-2xl bg-brand-ice border border-sky-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold uppercase text-brand-muted">Mức độ quá tải:</span>
+                                <span id="riskBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">An toàn</span>
+                            </div>
+                            <p id="riskText" class="text-xs text-gray-700 font-medium">Khối lượng tập luyện của bạn đang đạt mức tối ưu. Hãy tiếp tục duy trì giấc ngủ đủ 7-8h.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 1: BỐI CẢNH & THỰC TRẠNG -->
+    <section id="boicanh" class="py-16 bg-white border-t border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-brand-sky font-bold uppercase tracking-wider text-xs">Thách Thức Thị Trường</span>
+                <h2 class="text-2xl sm:text-4xl font-extrabold text-brand-dark mt-1">
+                    Tại Sao Runner Việt Nam Cần RunCare?
+                </h2>
+                <p class="text-brand-muted mt-3 text-sm sm:text-base">
+                    Chạy bộ đang phát triển bùng nổ, nhưng đa số runner lại tập luyện tự phát, dẫn tới chấn thương và thiếu định hướng phục hồi chuẩn y khoa.
+                </p>
+            </div>
+
+            <!-- Grid 3 Cột Thực Trạng -->
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bento-card p-6 rounded-2xl bg-brand-bg border border-gray-200">
+                    <div class="w-12 h-12 rounded-xl bg-sky-100 text-brand-sky flex items-center justify-center text-2xl font-bold mb-4">🏃‍♂️</div>
+                    <h3 class="text-lg font-bold text-brand-dark mb-2">Thách Thức Tập Luyện</h3>
+                    <p class="text-sm text-brand-muted leading-relaxed mb-4">
+                        Tập tự phát, thiếu giáo án cá nhân hóa theo thể trạng. Tăng cự ly quá nhanh dẫn tới quá tải cơ bắp và dễ chán nản.
+                    </p>
+                    <div class="inline-block px-3 py-1 rounded-lg bg-amber-50 text-amber-700 text-xs font-semibold">
+                        ⚠️ 78% Người mới từng chấn thương
+                    </div>
+                </div>
+
+                <div class="bento-card p-6 rounded-2xl bg-brand-bg border border-gray-200">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl font-bold mb-4">🥗</div>
+                    <h3 class="text-lg font-bold text-brand-dark mb-2">Phục Hồi & Dinh Dưỡng Thiếu Bài Bản</h3>
+                    <p class="text-sm text-brand-muted leading-relaxed mb-4">
+                        Đau khớp, căng cơ dai dẳng do không biết giãn cơ đúng cách; thiếu kiến thức về nạp Carb/Protein và Hydration trước - trong - sau Long Run.
+                    </p>
+                    <div class="inline-block px-3 py-1 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-semibold">
+                        💧 Bỏ qua phục hồi làm giảm 40% hiệu suất
+                    </div>
+                </div>
+
+                <div class="bento-card p-6 rounded-2xl bg-brand-bg border border-gray-200">
+                    <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-2xl font-bold mb-4">📲</div>
+                    <h3 class="text-lg font-bold text-brand-dark mb-2">Thông Tin Phân Tán & Thiếu Khoa Học</h3>
+                    <p class="text-sm text-brand-muted leading-relaxed mb-4">
+                        Tìm kiếm kiến thức rải rác trên MXH, khó kiểm chứng độ tin cậy. Các ứng dụng hiện tại chỉ theo dõi GPS chứ không tư vấn chuyên sâu 1-1.
+                    </p>
+                    <div class="inline-block px-3 py-1 rounded-lg bg-purple-50 text-purple-700 text-xs font-semibold">
+                        🔗 Cần 1 Hệ sinh thái Tích hợp duy nhất
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: CHÂN DƯƠNG KHÁCH HÀNG -->
+    <section id="chandung" class="py-16 bg-brand-ice/30 border-t border-b border-gray-200/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-10">
+                <span class="text-brand-sky font-bold uppercase tracking-wider text-xs">Thấu Hiểu Người Dùng</span>
+                <h2 class="text-2xl sm:text-4xl font-extrabold text-brand-dark mt-1">
+                    Chân Dung Đối Tượng Thụ Hưởng
+                </h2>
+                <p class="text-brand-muted mt-2 text-sm">
+                    Phân tích chi tiết Đặc điểm, Hành vi, Nỗi đau và Mong muốn thực tế của Runner Việt Nam.
+                </p>
+            </div>
+
+            <!-- Tab Buttons -->
+            <div class="flex justify-center mb-8 gap-2 overflow-x-auto pb-2 custom-scrollbar">
+                <button onclick="switchPersonaTab('facts')" id="tab-facts" class="persona-tab active-tab px-5 py-2.5 rounded-full font-bold text-sm bg-brand-sky text-white shadow-sm">
+                    1. Đặc Điểm (Facts)
+                </button>
+                <button onclick="switchPersonaTab('behavi')" id="tab-behavi" class="persona-tab px-5 py-2.5 rounded-full font-bold text-sm bg-white text-gray-600 hover:bg-gray-100">
+                    2. Hành Động (Behaviors)
+                </button>
+                <button onclick="switchPersonaTab('pains')" id="tab-pains" class="persona-tab px-5 py-2.5 rounded-full font-bold text-sm bg-white text-gray-600 hover:bg-gray-100">
+                    3. Nỗi Đau (Pains)
+                </button>
+                <button onclick="switchPersonaTab('goals')" id="tab-goals" class="persona-tab px-5 py-2.5 rounded-full font-bold text-sm bg-white text-gray-600 hover:bg-gray-100">
+                    4. Mong Muốn (Goals)
+                </button>
+            </div>
+
+            <!-- Tab Content Display Box -->
+            <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-md border border-gray-200 transition-all">
+                <!-- Facts -->
+                <div id="content-facts" class="persona-content block">
+                    <h3 class="text-xl font-bold text-brand-dark mb-4 border-b pb-2 flex items-center gap-2">
+                        <span>👤</span> Thống Kê Đặc Điểm Nhân Khẩu Học
+                    </h3>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="p-4 rounded-xl bg-gray-50 border">
+                            <div class="text-xs text-brand-muted font-semibold">Độ tuổi & Giới tính</div>
+                            <div class="text-base font-bold text-brand-dark mt-1">18 – 40 Tuổi (Nam & Nữ)</div>
+                            <div class="text-xs text-gray-500 mt-1">Sinh viên, NV văn phòng, Freelancer.</div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-gray-50 border">
+                            <div class="text-xs text-brand-muted font-semibold">Địa lý & Môi trường</div>
+                            <div class="text-base font-bold text-brand-dark mt-1">Thành Phố Lớn</div>
+                            <div class="text-xs text-gray-500 mt-1">Hà Nội, TP.HCM, Đà Nẵng, Cần Thơ.</div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-gray-50 border">
+                            <div class="text-xs text-brand-muted font-semibold">Thu nhập & Sức mua</div>
+                            <div class="text-base font-bold text-brand-dark mt-1">Trung Bình Khá trở lên</div>
+                            <div class="text-xs text-gray-500 mt-1">Sẵn sàng chi mua giày, Race & CS sức khỏe.</div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-gray-50 border">
+                            <div class="text-xs text-brand-muted font-semibold">Trình độ Công nghệ</div>
+                            <div class="text-base font-bold text-brand-dark mt-1">Thành Thạo Đồ Công Nghệ</div>
+                            <div class="text-xs text-gray-500 mt-1">Sử dụng Smartphone, Garmin, Apple Watch.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Behaviors -->
+                <div id="content-behavi" class="persona-content hidden">
+                    <h3 class="text-xl font-bold text-brand-dark mb-4 border-b pb-2 flex items-center gap-2">
+                        <span>👟</span> Thói Quên & Hành Vi Quan Sát Được
+                    </h3>
+                    <ul class="grid sm:grid-cols-2 gap-4 text-sm text-gray-700">
+                        <li class="flex items-start gap-2 p-3 rounded-lg bg-gray-50">
+                            <span class="text-brand-sky font-bold">•</span> Chạy 2–5 buổi/tuần, thường xuyên tham gia Long Run cuối tuần cùng CLB.
+                        </li>
+                        <li class="flex items-start gap-2 p-3 rounded-lg bg-gray-50">
+                            <span class="text-brand-sky font-bold">•</span> Theo dõi Pace, Distance, Heart Rate, Calories & Sleep qua Garmin/Strava.
+                        </li>
+                        <li class="flex items-start gap-2 p-3 rounded-lg bg-gray-50">
+                            <span class="text-brand-sky font-bold">•</span> Chủ động tìm kiếm giáo án, bài tập bổ trợ mobility và dinh dưỡng trên MXH.
+                        </li>
+                        <li class="flex items-start gap-2 p-3 rounded-lg bg-gray-50">
+                            <span class="text-brand-sky font-bold">•</span> Sẵn sàng đầu tư trang thiết bị: Giày carbon, Gel năng lượng, Muối điện giải.
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Pains -->
+                <div id="content-pains" class="persona-content hidden">
+                    <h3 class="text-xl font-bold text-red-600 mb-4 border-b pb-2 flex items-center gap-2">
+                        <span>❌</span> Nỗi Đau Lớn Nhất (PAINS)
+                    </h3>
+                    <div class="grid sm:grid-cols-3 gap-4 text-sm">
+                        <div class="p-4 rounded-xl bg-red-50 border border-red-100 text-red-900">
+                            <strong class="block mb-1 text-red-700">1. Lịch tập không phù hợp</strong>
+                            Không biết tự thiết kế giáo án vừa sức, dễ bị đuối sức hoặc bỏ dở giữa chừng.
+                        </div>
+                        <div class="p-4 rounded-xl bg-red-50 border border-red-100 text-red-900">
+                            <strong class="block mb-1 text-red-700">2. Lo lắng chấn thương</strong>
+                            Sợ đau gối, đau cơ ITB, rách cơ do chạy sai tư thế và quá tải quãng đường.
+                        </div>
+                        <div class="p-4 rounded-xl bg-red-50 border border-red-100 text-red-900">
+                            <strong class="block mb-1 text-red-700">3. Thông tin nhiễu loạn</strong>
+                            Nhiều nguồn tư vấn trái chiều trên mạng, thiếu hướng dẫn chuyên gia có uy tín.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Goals -->
+                <div id="content-goals" class="persona-content hidden">
+                    <h3 class="text-xl font-bold text-emerald-600 mb-4 border-b pb-2 flex items-center gap-2">
+                        <span>🎯</span> Mong Muốn & Mục Tiêu (GOALS)
+                    </h3>
+                    <div class="grid sm:grid-cols-3 gap-4 text-sm">
+                        <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-900">
+                            <strong class="block mb-1 text-emerald-700">1. Giáo án chuẩn Race</strong>
+                            Có lịch chạy riêng cho từng cột mốc: 5K, 10K, 21K (HM), 42K (FM).
+                        </div>
+                        <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-900">
+                            <strong class="block mb-1 text-emerald-700">2. Cảnh báo thông minh</strong>
+                            Được nhắc nhở quá tải, hướng dẫn dinh dưỡng & bài tập phục hồi hàng ngày.
+                        </div>
+                        <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-900">
+                            <strong class="block mb-1 text-emerald-700">3. Ứng dụng tất-cả-trong-một</strong>
+                            Quản lý toàn bộ tiến trình và được kết nối HLV/Y bác sĩ thể thao khi cần.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: MÔ HÌNH KINH DOANH CANVAS (BMC 9 Ô TRÌNH BÀY TỪ 1 TỚI 9) -->
+    <section id="bmc" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-brand-sky font-bold uppercase tracking-wider text-xs">Mô Hình Khởi Nghiệp</span>
+                <h2 class="text-2xl sm:text-4xl font-extrabold text-brand-dark mt-1">
+                    Mô Hình Kinh Doanh Canvas (9 Ô BMC)
+                </h2>
+                <p class="text-brand-muted mt-2 text-sm">
+                    Trình bày bài bản theo thứ tự chuẩn từ Ô 1 tới Ô 9 bám sát định hướng phát triển của RUNCARE.
+                </p>
+            </div>
+
+            <!-- Bento Grid layout for 9 BMC items -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Ô 1: CS -->
+                <div class="bento-card p-6 rounded-2xl bg-gradient-to-br from-sky-50 to-white border border-sky-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="w-8 h-8 rounded-lg bg-brand-sky text-white font-black text-sm flex items-center justify-center">1</span>
+                        <span class="text-xs font-bold text-brand-sky uppercase">Customer Segments</span>
+                    </div>
+                    <h3 class="font-bold text-brand-dark text-base mb-2">Phân Khúc Khách Hàng (CS)</h3>
+                    <ul class="text-xs text-gray-600 space-y-1.5 leading-relaxed">
+                        <li>• <strong>Người mới chạy:</strong> Cần giáo án dễ hiểu, an toàn.</li>
+                        <li>• <strong>Runner 5K–21K–42K:</strong> Cần tối ưu Pace, dinh dưỡng & phục hồi.</li>
+                        <li>• <strong>Runner Bán chuyên:</strong> Dữ liệu sâu, tư vấn 1-1.</li>
+                        <li>• <strong>Doanh nghiệp & CLB:</strong> Chương trình sức khỏe nội bộ.</li>
+                    </ul>
+                </div>
+
+                <!-- Ô 2: VP -->
+                <div class="bento-card p-6 rounded-2xl bg-gradient-to-br from-blue-50 to-white border border-blue-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="w-8 h-8 rounded-lg bg-blue-600 text-white font-black text-sm flex items-center justify-center">2</span>
+                        <span class="text-xs font-bold text-blue-600 uppercase">Value Proposition</span>
+                    </div>
+                    <h3 class="font-bold text-brand-dark text-base mb-2">Giải Pháp Giá Trị (VP)</h3>
+                    <ul class="text-xs text-gray-600 space-y-1.5 leading-relaxed">
+                        <li>• Cá nhân hóa giáo án theo mục tiêu Race & thể trạng.</li>
+                        <li>• Dashboard theo dõi Pace, mileage, nhịp tim, giấc ngủ.</li>
+                        <li>• Gợi ý thực đơn Hydration & Nạp Carb trước/sau chạy.</li>
+                        <li>• Bài tập Mobility/Recovery & Cảnh báo quá tải AI.</li>
+                    </ul>
+                </div>
+
+                <!-- Ô 3: CH -->
+                <div class="bento-card p-6 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="w-8 h-8 rounded-lg bg-teal-600 text-white font-black text-sm flex items-center justify-center">3</span>
+                        <span class="text-xs font-bold text-teal-600 uppercase">Channels</span>
+                    </div>
+                    <h3 class="font-bold text-brand-dark text-base mb-2">Kênh Phân Phối & Truyền Thông (CH)</h3>
+                    <ul class="text-xs text-gray-600 space-y-1.5 leading-relaxed">
+                        <li>• App Mobile RunCare (iOS/Android) + Website.</li>
+                        <li>• Facebook, TikTok, Instagram, Strava Club.</li>
+                        <li>• Hợp tác CLB chạy, cửa hàng thể thao, phòng gym.</li>
+                        <li>• Gian hàng Booth tại các giải Race lớn & Workshop.</li>
+                    </ul>
+                </div>
+
+                <!-- Ô 4: CR -->
+                <div class="bento-card p-6 rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="w-8 h-8 rounded-lg bg-indigo-600 text-white font-black text-sm flex items-center justify-center">4</span>
+                        <span class="text-xs font-bold text-indigo-600 uppercase">Customer Relationships</span>
+                    </div>
+                    <h3 class="font-bold text-brand-dark text-base mb-2">Quan Hệ Khách Hàng (CR)</h3>
+                    <ul class="text-xs text-gray-600 space-y-1.5 leading-relaxed">
+                        <li>• Chatbot AI tư vấn nhanh + HLV/CSKH hỗ trợ trực tiếp.</li>
+                        <li>• Tự động nhắc lịch tập, ngày nghỉ & Hydration.</li>
+                        <li>• Thách thức Challenge hàng tháng tích điểm đổi quà.</li>
+                        <li>• Khảo sát tiến bộ định kỳ cá nhân hóa.</li>
+                    </ul>
+                </div>
+
+                <!-- Ô 5: RS -->
+                <div class="bento-card p-6 rounded-2xl bg-gradient-to-br from-emerald-50 to-white border border-emerald-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="w-8 h-8 rounded-lg bg-emerald-600 text-white font-black text-sm flex items-center justify-center">5</span>
+                        <span class="text-xs font-bold text-emerald-600 uppercase">Revenue Streams</span>
+                    </div>
+                    <h3 class="font-bold text-brand-dark text-base mb-2">Dòng Doanh Thu (RS)</h3>
+                    <ul class="text-xs text-gray-600 space-y-1.5 leading-relaxed">
+                        <li>• Phí Gói Premium (đăng ký theo Tháng/Quý/Năm).</li>
+                        <li>• Phí Gói Coaching 1-1 chuyên sâu cùng HLV.</li>
+                        <li>• Hoa hồng giới thiệu sản phẩm (Giày, Gel, Muối).</li>
+                        <li>• Phí gói sức khỏe Doanh nghiệp & Quảng cáo chọn lọc.</li>
+                    </ul>
+                </div>
+
+                <!-- Ô 6: KR -->
+                <div class="bento-card p-6 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="w-8 h-8 rounded-lg bg-amber-600 text-white font-black text-sm flex items-center justify-center">6</span>
+                        <span class="text-xs font-bold text-amber-600 uppercase">Key Resources</span>
+                    </div>
+                    <h3 class="font-bold text-brand-dark text-base mb-2">Nguồn Lực Chính (KR)</h3>
+                    <ul class="text-xs text-gray-600 space-y-1.5 leading-relaxed">
+                        <li>• Nền tảng App Mobile & Thuật toán cá nhân hóa AI.</li>
+                        <li>• Đội ngũ kỹ thuật, Product & Chăm sóc khách hàng.</li>
+                        <li>• Mạng lưới HLV, Bác sĩ thể thao & Chuyên gia dinh dưỡng.</li>
+                        <li>• Cơ sở dữ liệu giáo án & Thư viện bài tập chuẩn y khoa.</li>
+                    </ul>
+                </div>
+
+                <!-- Ô 7: KA -->
+                <div class="bento-card p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="w-8 h-8 rounded-lg bg-purple-600 text-white font-black text-sm flex items-center justify-center">7</span>
+                        <span class="text-xs font-bold text-purple-600 uppercase">Key Activities</span>
+                    </div>
+                    <h3 class="font-bold text-brand-dark text-base mb-2">Hoạt Động Chính (KA)</h3>
+                    <ul class="text-xs text-gray-600 space-y-1.5 leading-relaxed">
+                        <li>• Phát triển, bảo trì và nâng cấp tính năng App.</li>
+                        <li>• Xây dựng và kiểm duyệt nội dung chuyên môn chuẩn khoa học.</li>
+                        <li>• Phân tích dữ liệu & tối ưu khuyến nghị cho runner.</li>
+                        <li>• Tổ chức sự kiện cộng đồng & Workshop tư vấn.</li>
+                    </ul>
+                </div>
+
+                <!-- Ô 8: KP -->
+                <div class="bento-card p-6 rounded-2xl bg-gradient-to-br from-rose-50 to-white border border-rose-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="w-8 h-8 rounded-lg bg-rose-600 text-white font-black text-sm flex items-center justify-center">8</span>
+                        <span class="text-xs font-bold text-rose-600 uppercase">Key Partners</span>
+                    </div>
+                    <h3 class="font-bold text-brand-dark text-base mb-2">Đối Tác Chính (KP)</h3>
+                    <ul class="text-xs text-gray-600 space-y-1.5 leading-relaxed">
+                        <li>• Ban tổ chức các Giải Race & Câu lạc bộ Running lớn.</li>
+                        <li>• HLV Chạy bộ, Phòng Gym, Trung tâm Vật lý trị liệu.</li>
+                        <li>• Cửa hàng giày thể thao & Hãng thực phẩm bổ sung.</li>
+                        <li>• Đơn vị tích hợp API Wearable (Garmin, Strava, Apple).</li>
+                    </ul>
+                </div>
+
+                <!-- Ô 9: CS -->
+                <div class="bento-card p-6 rounded-2xl bg-gradient-to-br from-slate-100 to-white border border-slate-300">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="w-8 h-8 rounded-lg bg-slate-800 text-white font-black text-sm flex items-center justify-center">9</span>
+                        <span class="text-xs font-bold text-slate-700 uppercase">Cost Structure</span>
+                    </div>
+                    <h3 class="font-bold text-brand-dark text-base mb-2">Cơ Cấu Chi Phí (CS)</h3>
+                    <ul class="text-xs text-gray-600 space-y-1.5 leading-relaxed">
+                        <li>• Chi phí duy trì Server, Cloud & Lập trình phần mềm.</li>
+                        <li>• Nhân sự (Kỹ thuật, CSKH, Thù lao HLV & Chuyên gia).</li>
+                        <li>• Chi phí Marketing, Truyền thông & Sự kiện Booth Race.</li>
+                        <li>• Phí vận hành đối tác, cổng thanh toán & chăm sóc cộng đồng.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: GIẢI PHÁP & GIÁ TRỊ CỐT LÕI -->
+    <section id="giaiphap" class="py-16 bg-brand-bg border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-brand-sky font-bold uppercase tracking-wider text-xs">Hệ Sinh Thái Tích Hợp</span>
+                <h2 class="text-2xl sm:text-4xl font-extrabold text-brand-dark mt-1">
+                    Trải Nghiệm Đột Phá Trên App RunCare
+                </h2>
+                <p class="text-brand-muted mt-2 text-sm">
+                    Sự kết hợp hoàn hảo giữa công nghệ AI cá nhân hóa và sự tư vấn chuẩn y khoa từ chuyên gia.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-8 items-center">
+                <!-- Left: 4 Features Bento Cards -->
+                <div class="lg:col-span-7 grid sm:grid-cols-2 gap-4">
+                    <div class="p-5 rounded-2xl bg-white border border-gray-200 shadow-sm hover:border-brand-sky transition">
+                        <div class="text-3xl mb-2">🎯</div>
+                        <h3 class="font-bold text-brand-dark text-base">1. Smart Training</h3>
+                        <p class="text-xs text-brand-muted mt-1 leading-relaxed">
+                            Giáo án cá nhân hóa theo thời gian thực dựa trên nhịp tim và phản hồi thể trạng sau mỗi buổi tập.
+                        </p>
+                    </div>
+
+                    <div class="p-5 rounded-2xl bg-white border border-gray-200 shadow-sm hover:border-brand-sky transition">
+                        <div class="text-3xl mb-2">🥗</div>
+                        <h3 class="font-bold text-brand-dark text-base">2. Dinh Dưỡng & Hydration</h3>
+                        <p class="text-xs text-brand-muted mt-1 leading-relaxed">
+                            Gợi ý bữa ăn nạp năng lượng chính xác đến từng mililit nước và gram Carb cho bài Long Run.
+                        </p>
+                    </div>
+
+                    <div class="p-5 rounded-2xl bg-white border border-gray-200 shadow-sm hover:border-brand-sky transition">
+                        <div class="text-3xl mb-2">🧘‍♂️</div>
+                        <h3 class="font-bold text-brand-dark text-base">3. Thư Viện Phục Hồi</h3>
+                        <p class="text-xs text-brand-muted mt-1 leading-relaxed">
+                            Video bài tập Stretch, Mobility, Yoga recovery giúp giải tỏa căng cơ và phòng tránh đau gối.
+                        </p>
+                    </div>
+
+                    <div class="p-5 rounded-2xl bg-white border border-gray-200 shadow-sm hover:border-brand-sky transition">
+                        <div class="text-3xl mb-2">👨‍⚕️</div>
+                        <h3 class="font-bold text-brand-dark text-base">4. Kết Nối Chuyên Gia 1-1</h3>
+                        <p class="text-xs text-brand-muted mt-1 leading-relaxed">
+                            Tư vấn trực tiếp với HLV chuyên nghiệp, Bác sĩ thể thao và Chuyên gia vật lý trị liệu.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right: Chart.js Live Visualization -->
+                <div class="lg:col-span-5 bg-white p-6 rounded-3xl border border-gray-200 shadow-md">
+                    <div class="mb-4">
+                        <h3 class="text-base font-bold text-brand-dark flex items-center gap-2">
+                            <span>📊</span> Tải Lượng Tập Luyện vs Nguy Cơ Chấn Thương
+                        </h3>
+                        <p class="text-xs text-brand-muted">Mô phỏng hiệu quả kiểm soát nguy cơ quá tải của RunCare so với chạy tự phát.</p>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="injuryRiskChart"></canvas>
+                    </div>
+                    <div class="text-center text-[11px] text-gray-500 mt-2">
+                        *Dữ liệu mô phỏng dựa trên mô hình quản lý tải Acute/Chronic Workload Ratio (ACWR).
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: PHÂN KHÚC KHÁCH HÀNG & CÁC GÓI DỊCH VỤ -->
+    <section id="goidichvu" class="py-16 bg-white border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-brand-sky font-bold uppercase tracking-wider text-xs">Gói Dịch Vụ Mới Nhất</span>
+                <h2 class="text-2xl sm:text-4xl font-extrabold text-brand-dark mt-1">
+                    Lựa Chọn Linh Hoạt Cho Mọi Runner
+                </h2>
+                <p class="text-brand-muted mt-2 text-sm">
+                    Trải nghiệm ứng dụng miễn phí hoặc nâng cấp lên gói Pro để có trợ lý sức khỏe cá nhân đồng hành.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 items-stretch">
+                <!-- Basic Plan -->
+                <div class="p-8 rounded-3xl bg-brand-bg border border-gray-200 flex flex-col justify-between hover:shadow-lg transition">
+                    <div>
+                        <div class="inline-block px-3 py-1 rounded-full bg-gray-200 text-gray-700 text-xs font-bold mb-4">Mở Đầu</div>
+                        <h3 class="text-2xl font-bold text-brand-dark">Gói Basic</h3>
+                        <p class="text-xs text-brand-muted mt-1">Dành cho người mới bắt đầu hình thành thói quen chạy.</p>
+                        <div class="my-6">
+                            <span class="text-4xl font-black text-brand-dark">0 VNĐ</span>
+                            <span class="text-xs text-gray-500">/ Mãi Mãi</span>
+                        </div>
+                        <ul class="text-sm space-y-3 text-gray-600 mb-8">
+                            <li class="flex items-center gap-2">✓ Nhật ký chạy & đồng bộ GPS cơ bản</li>
+                            <li class="flex items-center gap-2">✓ Giáo án chạy 5K / 10K mẫu</li>
+                            <li class="flex items-center gap-2">✓ Thư viện bài tập giãn cơ cơ bản</li>
+                            <li class="flex items-center gap-2 text-gray-400">✕ Cảnh báo quá tải AI</li>
+                            <li class="flex items-center gap-2 text-gray-400">✕ Tư vấn 1-1 với Chuyên gia</li>
+                        </ul>
+                    </div>
+                    <button onclick="openModal('signupModal')" class="w-full py-3 rounded-xl border border-brand-dark text-brand-dark font-bold hover:bg-brand-dark hover:text-white transition">
+                        Tải Về Miễn Phí
+                    </button>
+                </div>
+
+                <!-- Premium Plan -->
+                <div class="p-8 rounded-3xl bg-gradient-to-b from-brand-dark to-slate-900 text-white flex flex-col justify-between shadow-xl relative transform md:-translate-y-2 border-2 border-brand-sky">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-brand-sky text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider shadow">
+                        Phổ Biến Nhất ⭐
+                    </div>
+                    <div>
+                        <div class="inline-block px-3 py-1 rounded-full bg-sky-900/60 text-brand-sky text-xs font-bold mb-4">Nâng Cấp Pro</div>
+                        <h3 class="text-2xl font-bold">Gói Premium</h3>
+                        <p class="text-xs text-gray-300 mt-1">Tối ưu hiệu suất & phòng ngừa chấn thương toàn diện.</p>
+                        <div class="my-6">
+                            <span class="text-4xl font-black text-brand-sky">149,000</span>
+                            <span class="text-xs text-gray-300">VNĐ / Tháng</span>
+                        </div>
+                        <ul class="text-sm space-y-3 text-gray-200 mb-8">
+                            <li class="flex items-center gap-2">✓ Tất cả tính năng Gói Basic</li>
+                            <li class="flex items-center gap-2">✓ Đồng bộ Garmin, Strava, Apple Watch</li>
+                            <li class="flex items-center gap-2">✓ Cảnh báo quá tải & Chỉ số nhịp tim AI</li>
+                            <li class="flex items-center gap-2">✓ Lịch dinh dưỡng & Hydration Long Run</li>
+                            <li class="flex items-center gap-2">✓ Thư viện bài tập Phục hồi & Mobility nâng cao</li>
+                        </ul>
+                    </div>
+                    <button onclick="openModal('signupModal')" class="w-full py-3.5 rounded-xl bg-brand-sky hover:bg-sky-600 text-white font-bold transition shadow-lg">
+                        Đăng Ký Trải Nghiệm 7 Ngày
+                    </button>
+                </div>
+
+                <!-- Coaching 1-1 Plan -->
+                <div class="p-8 rounded-3xl bg-brand-bg border border-gray-200 flex flex-col justify-between hover:shadow-lg transition">
+                    <div>
+                        <div class="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold mb-4">Chuyên Châm</div>
+                        <h3 class="text-2xl font-bold text-brand-dark">Gói Coaching 1-1</h3>
+                        <p class="text-xs text-brand-muted mt-1">Dành cho Runner chinh phục HM/FM muốn đạt Sub cao.</p>
+                        <div class="my-6">
+                            <span class="text-4xl font-black text-brand-dark">990,000</span>
+                            <span class="text-xs text-gray-500">VNĐ / Tháng</span>
+                        </div>
+                        <ul class="text-sm space-y-3 text-gray-600 mb-8">
+                            <li class="flex items-center gap-2">✓ Tất cả đặc quyền Gói Premium</li>
+                            <li class="flex items-center gap-2">✓ HLV riêng theo sát và chỉnh bài hàng tuần</li>
+                            <li class="flex items-center gap-2">✓ Bác sĩ thể thao tư vấn khi đau mỏi</li>
+                            <li class="flex items-center gap-2">✓ Thực đơn dinh dưỡng thiết kế riêng</li>
+                            <li class="flex items-center gap-2">✓ Cam kết cải thiện PR an toàn</li>
+                        </ul>
+                    </div>
+                    <button onclick="openModal('signupModal')" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition">
+                        Đăng Ký Tư Vấn 1-1
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: LỘ TRÌNH PHÁT TRIỂN DỰ ÁN -->
+    <section id="lotrinh" class="py-16 bg-brand-ice/20 border-t border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-brand-sky font-bold uppercase tracking-wider text-xs">Chiến Lược Dài Hạn</span>
+                <h2 class="text-2xl sm:text-4xl font-extrabold text-brand-dark mt-1">
+                    Lộ Trình Phát Triển Dự Án RunCare
+                </h2>
+                <p class="text-brand-muted mt-2 text-sm">
+                    Bốn giai đoạn chiến lược đưa RunCare trở thành ứng dụng dẫn đầu chăm sóc sức khỏe runner.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+                <div class="bg-white p-6 rounded-2xl border-2 border-brand-sky shadow-md relative">
+                    <div class="text-xs font-extrabold text-brand-sky uppercase tracking-wider mb-1">Giai Đoạn 1</div>
+                    <h3 class="text-lg font-black text-brand-dark mb-2">Thử Nghiệm MVP</h3>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        Launch App phiên bản đầu tiên: Hồ sơ runner, thiết lập mục tiêu cự ly, giáo án chạy chuẩn cơ bản và nhật ký tập luyện.
+                    </p>
+                    <span class="mt-4 inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-sky-100 text-sky-800">Đã Hoàn Thành ✓</span>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm relative">
+                    <div class="text-xs font-extrabold text-blue-600 uppercase tracking-wider mb-1">Giai Đoạn 2</div>
+                    <h3 class="text-lg font-black text-brand-dark mb-2">Cá Nhân Hóa AI</h3>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        Kết nối đồng hồ Garmin/Strava, hiển thị Dashboard tiến độ, thuật toán cảnh báo quá tải & gợi ý thực đơn nạp năng lượng.
+                    </p>
+                    <span class="mt-4 inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800">Đang Triển Khai ⚡</span>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm relative">
+                    <div class="text-xs font-extrabold text-teal-600 uppercase tracking-wider mb-1">Giai Đoạn 3</div>
+                    <h3 class="text-lg font-black text-brand-dark mb-2">Hệ Sinh Thái Wide</h3>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        Kết nối HLV, phòng tập phục hồi, cửa hàng thể thao & đối tác giải Race. Mở rộng cộng đồng RunCare Challenge.
+                    </p>
+                    <span class="mt-4 inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-gray-100 text-gray-600">Kế Hoạch Q3/2025</span>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm relative">
+                    <div class="text-xs font-extrabold text-purple-600 uppercase tracking-wider mb-1">Giai Đoạn 4</div>
+                    <h3 class="text-lg font-black text-brand-dark mb-2">Mở Rộng B2B</h3>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        Phát triển gói Doanh nghiệp (Corporate Wellness), tổ chức giải chạy nội bộ & mở rộng sang thị trường Đông Nam Á.
+                    </p>
+                    <span class="mt-4 inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-gray-100 text-gray-600">Kế Hoạch 2026</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 7: ĐỘI NGŨ DỰ ÁN -->
+    <section id="doingu" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-brand-sky font-bold uppercase tracking-wider text-xs">Đội Ngũ Tâm Huyết</span>
+                <h2 class="text-2xl sm:text-4xl font-extrabold text-brand-dark mt-1">
+                    Đội Ngũ Phát Triển Dự Án RUNCARE
+                </h2>
+                <p class="text-brand-muted mt-2 text-sm">
+                    11 nhân sự chuyên môn giàu kinh nghiệm luôn sẵn sàng đồng hành cùng từng bước chạy của bạn.
+                </p>
+            </div>
+
+            <!-- Team Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Member 1 -->
+                <div class="bento-card bg-brand-bg p-5 rounded-2xl border border-sky-100 flex flex-col items-center text-center cursor-pointer" onclick="showTeamModal('Nguyễn Thị Diệu Hồng', 'Founder & Chief Executive Officer (CEO)', 'Định hướng chiến lược toàn diện, điều phối chung và định hình tầm nhìn phát triển hệ sinh thái RunCare.')">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-brand-sky to-blue-600 text-white flex items-center justify-center text-xl font-bold mb-3 shadow-md border-2 border-white">
+                        NDH
+                    </div>
+                    <span class="px-2.5 py-0.5 rounded-full bg-sky-100 text-brand-sky text-[10px] font-bold uppercase mb-1">CEO / Founder</span>
+                    <h3 class="font-bold text-brand-dark text-base">Nguyễn Thị Diệu Hồng</h3>
+                    <p class="text-xs text-brand-muted mt-1 leading-snug">Quản trị Chiến lược & Điều phối Dự án</p>
+                </div>
+
+                <!-- Member 2 -->
+                <div class="bento-card bg-brand-bg p-5 rounded-2xl border border-sky-100 flex flex-col items-center text-center cursor-pointer" onclick="showTeamModal('Nguyễn Thị Yến Nhi', 'Co-Founder & Chief Product Officer (CPO)', 'Quản lý chuỗi trải nghiệm sản phẩm, nghiên cứu nhu cầu runner và định hướng tính năng ứng dụng.')">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-teal-400 to-emerald-600 text-white flex items-center justify-center text-xl font-bold mb-3 shadow-md border-2 border-white">
+                        NYN
+                    </div>
+                    <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase mb-1">CPO / Co-Founder</span>
+                    <h3 class="font-bold text-brand-dark text-base">Nguyễn Thị Yến Nhi</h3>
+                    <p class="text-xs text-brand-muted mt-1 leading-snug">Quản lý Sản phẩm & Trải nghiệm UX</p>
+                </div>
+
+                <!-- Member 3 -->
+                <div class="bento-card bg-brand-bg p-5 rounded-2xl border border-sky-100 flex flex-col items-center text-center cursor-pointer" onclick="showTeamModal('Nguyễn Mai Tố Trinh', 'Chief Technology Officer (CTO)', 'Lãnh đạo đội ngũ kỹ thuật, phát triển thuật toán cá nhân hóa giáo án và tích hợp API Wearable.')">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-purple-500 to-indigo-600 text-white flex items-center justify-center text-xl font-bold mb-3 shadow-md border-2 border-white">
+                        NTT
+                    </div>
+                    <span class="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-bold uppercase mb-1">CTO - Tech Lead</span>
+                    <h3 class="font-bold text-brand-dark text-base">Nguyễn Mai Tố Trinh</h3>
+                    <p class="text-xs text-brand-muted mt-1 leading-snug">Kiến trúc Hệ thống & Thuật toán AI</p>
+                </div>
+
+                <!-- Member 4 -->
+                <div class="bento-card bg-brand-bg p-5 rounded-2xl border border-sky-100 flex flex-col items-center text-center cursor-pointer" onclick="showTeamModal('Ngô Thị Thanh Nhân', 'Head of Athletic Performance & Coaching', 'Xây dựng khung giáo án chạy chuẩn khoa học, quản lý và kiểm duyệt đội ngũ HLV đồng hành.')">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-500 to-orange-600 text-white flex items-center justify-center text-xl font-bold mb-3 shadow-md border-2 border-white">
+                        NTN
+                    </div>
+                    <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold uppercase mb-1">Head Coaching</span>
+                    <h3 class="font-bold text-brand-dark text-base">Ngô Thị Thanh Nhân</h3>
+                    <p class="text-xs text-brand-muted mt-1 leading-snug">Quản lý Giáo án & Đội ngũ HLV</p>
+                </div>
+
+                <!-- Member 5 -->
+                <div class="bento-card bg-brand-bg p-5 rounded-2xl border border-sky-100 flex flex-col items-center text-center cursor-pointer" onclick="showTeamModal('Đặng Thị Bảo Hân', 'Lead Sports Nutritionist', 'Nghiên cứu và xây dựng hệ thống thực đơn, lộ trình Nạp năng lượng & Hydration cho từng cự ly.')">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-green-500 to-teal-600 text-white flex items-center justify-center text-xl font-bold mb-3 shadow-md border-2 border-white">
+                        DBH
+                    </div>
+                    <span class="px-2.5 py-0.5 rounded-full bg-green-100 text-green-800 text-[10px] font-bold uppercase mb-1">Nutrition Lead</span>
+                    <h3 class="font-bold text-brand-dark text-base">Đặng Thị Bảo Hân</h3>
+                    <p class="text-xs text-brand-muted mt-1 leading-snug">Chuyên gia Dinh dưỡng Thể thao</p>
+                </div>
+
+                <!-- Member 6 -->
+                <div class="bento-card bg-brand-bg p-5 rounded-2xl border border-sky-100 flex flex-col items-center text-center cursor-pointer" onclick="showTeamModal('Lê Xuân Bình', 'Lead Physical Therapist & Recovery Expert', 'Biên soạn bài tập giãn cơ, phòng ngừa chấn thương và cố vấn giải pháp phục hồi sau chạy.')">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-rose-500 to-red-600 text-white flex items-center justify-center text-xl font-bold mb-3 shadow-md border-2 border-white">
+                        LXB
+                    </div>
+                    <span class="px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 text-[10px] font-bold uppercase mb-1">Recovery Lead</span>
+                    <h3 class="font-bold text-brand-dark text-base">Lê Xuân Bình</h3>
+                    <p class="text-xs text-brand-muted mt-1 leading-snug">Chuyên gia Phục hồi Chấn thương</p>
+                </div>
+
+                <!-- Member 7 -->
+                <div class="bento-card bg-brand-bg p-5 rounded-2xl border border-sky-100 flex flex-col items-center text-center cursor-pointer" onclick="showTeamModal('Hồ Thị Cheng', 'Lead UI/UX Designer', 'Phụ trách thiết kế giao diện website và ứng dụng di động theo tiêu chuẩn trực quan, hiện đại.')">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-500 text-white flex items-center justify-center text-xl font-bold mb-3 shadow-md border-2 border-white">
+                        HTC
+                    </div>
+                    <span class="px-2.5 py-0.5 rounded-full bg-cyan-100 text-cyan-800 text-[10px] font-bold uppercase mb-1">Lead UI/UX</span>
+                    <h3 class="font-bold text-brand-dark text-base">Hồ Thị Cheng</h3>
+                    <p class="text-xs text-brand-muted mt-1 leading-snug">Thiết kế Giao diện App & Web</p>
+                </div>
+
+                <!-- Member 8 -->
+                <div class="bento-card bg-brand-bg p-5 rounded-2xl border border-sky-100 flex flex-col items-center text-center cursor-pointer" onclick="showTeamModal('Nguyễn Xuân Vũ Lân', 'Head of Marketing & Community Building', 'Xây dựng chiến dịch truyền thông, quản lý kênh mạng xã hội và phát triển cộng đồng RunCare Club.')">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-pink-500 to-rose-500 text-white flex items-center justify-center text-xl font-bold mb-3 shadow-md border-2 border-white">
+                        NVL
+                    </div>
+                    <span class="px-2.5 py-0.5 rounded-full bg-pink-100 text-pink-800 text-[10px] font-bold uppercase mb-1">Head Marketing</span>
+                    <h3 class="font-bold text-brand-dark text-base">Nguyễn Xuân Vũ Lân</h3>
+                    <p class="text-xs text-brand-muted mt-1 leading-snug">Truyền thông & Phát triển Cộng đồng</p>
+                </div>
+
+                <!-- Member 9 -->
+                <div class="bento-card bg-brand-bg p-5 rounded-2xl border border-sky-100 flex flex-col items-center text-center cursor-pointer" onclick="showTeamModal('Mai Trần Nguyên', 'Partnership & Event Manager', 'Kết nối đối tác thương hiệu thể thao, các phòng gym, trung tâm phục hồi và Ban tổ chức các giải chạy.')">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-yellow-500 to-amber-600 text-white flex items-center justify-center text-xl font-bold mb-3 shadow-md border-2 border-white">
+                        MTN
+                    </div>
+                    <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold uppercase mb-1">Partnership Manager</span>
+                    <h3 class="font-bold text-brand-dark text-base">Mai Trần Nguyên</h3>
+                    <p class="text-xs text-brand-muted mt-1 leading-snug">Phát triển Đối tác & Giải Race</p>
+                </div>
+
+                <!-- Member 10 -->
+                <div class="bento-card bg-brand-bg p-5 rounded-2xl border border-sky-100 flex flex-col items-center text-center cursor-pointer" onclick="showTeamModal('Đỗ Quý Anh Thư', 'Head of Customer Success (CSKH)', 'Quản lý bộ phận hỗ trợ khách hàng, thu nhận phản hồi để cải tiến chất lượng dịch vụ định kỳ.')">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-600 text-white flex items-center justify-center text-xl font-bold mb-3 shadow-md border-2 border-white">
+                        DAT
+                    </div>
+                    <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase mb-1">Head of CSKH</span>
+                    <h3 class="font-bold text-brand-dark text-base">Đỗ Quý Anh Thư</h3>
+                    <p class="text-xs text-brand-muted mt-1 leading-snug">Trưởng bộ phận Chăm sóc Runner</p>
+                </div>
+
+                <!-- Member 11 -->
+                <div class="bento-card bg-brand-bg p-5 rounded-2xl border border-sky-100 flex flex-col items-center text-center cursor-pointer" onclick="showTeamModal('Nguyễn Thị Anh Thư', 'Lead Data Analyst & AI Specialist', 'Phân tích dữ liệu nhịp tim, Pace, quãng đường và giấc ngủ để tối ưu hóa cảnh báo quá tải cho runner.')">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-slate-700 to-slate-900 text-white flex items-center justify-center text-xl font-bold mb-3 shadow-md border-2 border-white">
+                        NAT
+                    </div>
+                    <span class="px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-800 text-[10px] font-bold uppercase mb-1">Lead Data Analyst</span>
+                    <h3 class="font-bold text-brand-dark text-base">Nguyễn Thị Anh Thư</h3>
+                    <p class="text-xs text-brand-muted mt-1 leading-snug">Phân tích Dữ liệu Tập luyện & AI</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 8: BẢNG HỎI PHẢN HỒI & ĐÓNG GÓP Ý KIẾN DỰ ÁN -->
+    <section id="phanhoi" class="py-16 bg-gradient-to-b from-brand-ice/30 to-white border-t border-gray-200">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-10">
+                <span class="text-brand-sky font-bold uppercase tracking-wider text-xs">Thu Nhận Ý Kiến</span>
+                <h2 class="text-2xl sm:text-4xl font-extrabold text-brand-dark mt-1">
+                    Đóng Góp Ý Kiến Cho Dự Án RUNCARE
+                </h2>
+                <p class="text-brand-muted mt-2 text-sm">
+                    Mọi nhận xét của bạn đều được lưu tự động về <strong>Google Sheet</strong> trực tuyến của dự án để giúp chúng tôi hoàn thiện sản phẩm.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-8 items-start">
+                <!-- Info Column -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="p-6 rounded-3xl bg-white border border-sky-100 shadow-md space-y-4">
+                        <h3 class="text-lg font-bold text-brand-dark flex items-center gap-2">
+                            <span>📋</span> Thông Tin Thu Thập
+                        </h3>
+                        <p class="text-xs text-brand-muted leading-relaxed">
+                            Bảng hỏi này ghi nhận trực tiếp ý kiến đóng góp từ các Runner, HLV và Nhà đầu tư quan tâm đến mô hình RunCare.
+                        </p>
+                        
+                        <div class="space-y-3 pt-2">
+                            <div class="flex items-start gap-3">
+                                <span class="w-7 h-7 rounded-lg bg-sky-100 text-brand-sky font-bold text-xs flex items-center justify-center shrink-0">1</span>
+                                <div class="text-xs">
+                                    <strong class="text-brand-dark block">Dấu thời gian (Timestamp)</strong>
+                                    Tự động ghi lại thời điểm bạn gửi phản hồi vào Google Sheet.
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3">
+                                <span class="w-7 h-7 rounded-lg bg-sky-100 text-brand-sky font-bold text-xs flex items-center justify-center shrink-0">2</span>
+                                <div class="text-xs">
+                                    <strong class="text-brand-dark block">Họ và tên</strong>
+                                    Xác nhận thông tin danh tính của người góp ý.
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3">
+                                <span class="w-7 h-7 rounded-lg bg-sky-100 text-brand-sky font-bold text-xs flex items-center justify-center shrink-0">3</span>
+                                <div class="text-xs">
+                                    <strong class="text-brand-dark block">Số điện thoại</strong>
+                                    Để đội ngũ RunCare liên hệ tư vấn hoặc trao quà tri ân.
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3">
+                                <span class="w-7 h-7 rounded-lg bg-sky-100 text-brand-sky font-bold text-xs flex items-center justify-center shrink-0">4</span>
+                                <div class="text-xs">
+                                    <strong class="text-brand-dark block">Ý kiến nhận xét & đóng góp</strong>
+                                    Nội dung góp ý chuyên sâu về giao diện, tính năng hoặc mô hình.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-[11px]">
+                            🔒 <strong>Bảo mật:</strong> Toàn bộ dữ liệu thu thập chỉ phục vụ nghiên cứu phát triển dự án RUNCARE và được bảo vệ theo chính sách quyền riêng tư.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Container Column (Embedded Google Form) -->
+                <div class="lg:col-span-7">
+                    <div class="bg-white rounded-3xl border border-gray-200 shadow-xl overflow-hidden p-2 sm:p-4">
+                        <div class="flex justify-between items-center px-4 py-2 border-b border-gray-100 text-xs mb-2">
+                            <span class="font-bold text-brand-dark flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                Google Form Trực Tuyến
+                            </span>
+                            <span class="text-brand-muted">Tự động đồng bộ Google Sheet ⚡</span>
+                        </div>
+
+                        <!-- Embedded Google Form Container -->
+                        <div class="iframe-container w-full bg-gray-50 rounded-2xl overflow-hidden border border-gray-100">
+                            <iframe 
+                                src="https://docs.google.com/forms/d/e/1FAIpQLScowQkGG947rcbNa2TXOc1jS5eTZHyjY-iGyb3X0Wurci0Xsw/viewform?embedded=true" 
+                                width="100%" 
+                                height="750" 
+                                frameborder="0" 
+                                marginheight="0" 
+                                marginwidth="0"
+                                class="w-full h-[750px] border-0"
+                                loading="lazy">
+                                Đang tải…
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER SECTION -->
+    <footer class="bg-brand-dark text-gray-300 py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- Col 1: Brand -->
+                <div class="space-y-3">
+                    <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-lg bg-brand-sky flex items-center justify-center text-white text-lg font-bold">🏃‍♂️</span>
+                        <span class="text-xl font-black text-white">RUN<span class="text-brand-sky">CARE</span></span>
+                    </div>
+                    <p class="text-xs text-gray-400 leading-relaxed">
+                        Slogan: <em>RUNCARE – RUN SMART. RECOVER WELL. LIVE BETTER.</em><br>
+                        Hệ sinh thái chăm sóc toàn diện cho runner Việt Nam.
+                    </p>
+                    <div class="pt-2 flex gap-3 text-xs font-bold text-brand-sky">
+                        <a href="#" class="hover:underline">App Store</a> • 
+                        <a href="#" class="hover:underline">Google Play</a>
+                    </div>
+                </div>
+
+                <!-- Col 2: Quick Links -->
+                <div>
+                    <h4 class="text-sm font-bold text-white mb-3">Liên Kết Nhanh</h4>
+                    <ul class="space-y-2 text-xs text-gray-400">
+                        <li><a href="#boicanh" class="hover:text-white">Bối Cảnh & Thực Trạng</a></li>
+                        <li><a href="#chandung" class="hover:text-white">Chân Dung Khách Hàng</a></li>
+                        <li><a href="#bmc" class="hover:text-white">Mô Hình Business Canvas</a></li>
+                        <li><a href="#giaiphap" class="hover:text-white">Tính Năng & Hệ Sinh Thái</a></li>
+                        <li><a href="#phanhoi" class="hover:text-white">Góp Ý & Phản Hồi</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Legal & Health Policy -->
+                <div>
+                    <h4 class="text-sm font-bold text-white mb-3">Pháp Lý & Y Tế</h4>
+                    <ul class="space-y-2 text-xs text-gray-400">
+                        <li><a href="#" class="hover:text-white">Điều khoản sử dụng dịch vụ</a></li>
+                        <li><a href="#" class="hover:text-white">Chính sách bảo mật dữ liệu sức khỏe</a></li>
+                        <li><a href="#" class="hover:text-white">Tuyên bố miễn trừ trách nhiệm y tế</a></li>
+                        <li><a href="#" class="hover:text-white">Quy trình hoàn tiền Gói Premium</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: Newsletter -->
+                <div>
+                    <h4 class="text-sm font-bold text-white mb-3">Đăng Ký Nhận Bản Tin</h4>
+                    <p class="text-xs text-gray-400 mb-3">Nhận bí quyết chạy an toàn & mẹo phục hồi hàng tuần.</p>
+                    <form onsubmit="event.preventDefault(); alert('Cảm ơn bạn đã đăng ký nhận tin từ RunCare!');" class="space-y-2">
+                        <input type="email" placeholder="Email của bạn..." required class="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 text-xs text-white focus:outline-none focus:border-brand-sky">
+                        <button type="submit" class="w-full py-2 rounded-lg bg-brand-sky text-white text-xs font-bold hover:bg-sky-600 transition">Đăng Ký Ngay</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-gray-800 text-center text-xs text-gray-500">
+                © 2026 RUNCARE Startup Project. All rights reserved. Thiết kế UI/UX bài tập lớn môn Khởi nghiệp.
+            </div>
+        </div>
+    </footer>
+
+    <!-- STICKY BOTTOM BAR FOR MOBILE CTA -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-200 p-3 flex md:hidden items-center justify-between z-40 shadow-lg">
+        <div class="flex items-center gap-2">
+            <span class="text-lg">🏃‍♂️</span>
+            <div class="text-xs font-bold text-brand-dark">RunCare App</div>
+        </div>
+        <a href="#phanhoi" class="px-4 py-2 rounded-full bg-brand-sky text-white text-xs font-bold shadow hover:bg-sky-600">
+            Góp Ý Dự Án 💬
+        </a>
+    </div>
+
+    <!-- MODAL POPUP SYSTEM -->
+    <!-- Member Detail Modal -->
+    <div id="teamModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 relative shadow-2xl">
+            <button onclick="closeModal('teamModal')" class="absolute top-4 right-4 text-gray-400 hover:text-black font-bold text-xl">✕</button>
+            <div class="text-center">
+                <div id="modalAvatar" class="w-20 h-20 rounded-full bg-brand-sky text-white text-xl font-bold flex items-center justify-center mx-auto mb-3 shadow">
+                    NDH
+                </div>
+                <h3 id="modalName" class="text-xl font-bold text-brand-dark">Tên Thành Viên</h3>
+                <p id="modalRole" class="text-xs font-bold text-brand-sky mt-0.5">Chức Danh</p>
+                <div class="my-4 border-t border-gray-100"></div>
+                <p id="modalDesc" class="text-xs text-gray-600 leading-relaxed text-left">
+                    Mô tả chi tiết vai trò chuyên môn...
+                </p>
+                <button onclick="closeModal('teamModal')" class="mt-6 w-full py-2.5 rounded-xl bg-gray-100 text-gray-700 font-bold text-xs hover:bg-gray-200">
+                    Đóng Cửa Sổ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal Placeholder -->
+    <div id="signupModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 relative shadow-2xl text-center">
+            <button onclick="closeModal('signupModal')" class="absolute top-4 right-4 text-gray-400 hover:text-black font-bold text-xl">✕</button>
+            <h3 class="text-xl font-bold text-brand-dark mb-1">Đăng Ký Tài Khoản RunCare</h3>
+            <p class="text-xs text-brand-muted mb-4">Nhận ngay 7 ngày dùng thử gói Premium hoàn toàn miễn phí.</p>
+            <form onsubmit="event.preventDefault(); alert('Đăng ký thành công!'); closeModal('signupModal');" class="space-y-3 text-left">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Họ và tên:</label>
+                    <input type="text" required class="w-full px-3 py-2 rounded-xl border border-gray-300 text-xs focus:ring-2 focus:ring-brand-sky focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Email / Số điện thoại:</label>
+                    <input type="text" required class="w-full px-3 py-2 rounded-xl border border-gray-300 text-xs focus:ring-2 focus:ring-brand-sky focus:outline-none">
+                </div>
+                <button type="submit" class="w-full py-3 rounded-xl bg-brand-sky text-white font-bold text-xs shadow hover:bg-sky-600 transition">
+                    Xác Nhận Đăng Ký
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Persona Tab Switcher
+        function switchPersonaTab(tabName) {
+            document.querySelectorAll('.persona-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.persona-tab').forEach(btn => {
+                btn.classList.remove('bg-brand-sky', 'text-white', 'shadow-sm');
+                btn.classList.add('bg-white', 'text-gray-600');
+            });
+
+            document.getElementById('content-' + tabName).classList.remove('hidden');
+            const activeBtn = document.getElementById('tab-' + tabName);
+            activeBtn.classList.remove('bg-white', 'text-gray-600');
+            activeBtn.classList.add('bg-brand-sky', 'text-white', 'shadow-sm');
+        }
+
+        // Quiz / Calculator logic
+        function calculateRisk() {
+            const distance = document.getElementById('targetDistance').value;
+            const weeklyKm = parseFloat(document.getElementById('weeklyKm').value) || 0;
+            const sleepHours = parseFloat(document.getElementById('sleepHours').value) || 0;
+
+            const resultDiv = document.getElementById('quizResult');
+            const badge = document.getElementById('riskBadge');
+            const text = document.getElementById('riskText');
+
+            resultDiv.classList.remove('hidden');
+
+            let riskScore = (weeklyKm / 10) - (sleepHours * 0.8);
+
+            if (riskScore > 3.5) {
+                badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800';
+                badge.textContent = '⚠️ Cảnh báo Căng Thẳng Tập Luyện';
+                text.textContent = 'Quãng đường hàng tuần của bạn khá cao so với thời lượng ngủ phục hồi. Khuyến nghị áp dụng bài tập Mobility & bổ sung Hydration.';
+            } else if (riskScore > 5) {
+                badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800';
+                badge.textContent = '🚨 Nguy Cơ Quá Tải Cao';
+                text.textContent = 'Khối lượng tập tăng vọt dễ dẫn đến đau khớp ITB hoặc chấn thương. Hãy dành 1-2 ngày nghỉ chủ động!';
+            } else {
+                badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800';
+                badge.textContent = '✅ Chỉ Số Tập Luyện An Toàn';
+                text.textContent = 'Khối lượng tập và thời gian ngủ phục hồi đạt mức cân bằng hoàn hảo! Tiếp tục duy trì giáo án RunCare.';
+            }
+        }
+
+        // Modal Helpers
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        // Team Member Modal Handler
+        function showTeamModal(name, role, desc) {
+            document.getElementById('modalName').textContent = name;
+            document.getElementById('modalRole').textContent = role;
+            document.getElementById('modalDesc').textContent = desc;
+            
+            const parts = name.trim().split(' ');
+            let initials = "";
+            if (parts.length >= 3) {
+                initials = parts[0][0] + parts[parts.length - 2][0] + parts[parts.length - 1][0];
+            } else if (parts.length === 2) {
+                initials = parts[0][0] + parts[1][0];
+            } else {
+                initials = name.substring(0, 3);
+            }
+            document.getElementById('modalAvatar').textContent = initials.toUpperCase();
+
+            openModal('teamModal');
+        }
+
+        // Chart.js Setup
+        window.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('injuryRiskChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4', 'Tuần 5', 'Tuần 6'],
+                    datasets: [
+                        {
+                            label: 'Chạy Tự Phát (Nguy cơ Chấn thương)',
+                            data: [20, 35, 60, 85, 70, 90],
+                            borderColor: '#EF4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Đồng Hành Cùng RunCare (An Toàn)',
+                            data: [15, 22, 28, 32, 30, 35],
+                            borderColor: '#0EA5E9',
+                            backgroundColor: 'rgba(14, 165, 233, 0.15)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { size: 11, family: 'Inter' },
+                                boxWidth: 12
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y + '%';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Mức độ Nguy cơ (%)',
+                                font: { size: 10 }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
